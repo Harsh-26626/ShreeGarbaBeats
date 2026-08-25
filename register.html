@@ -532,8 +532,10 @@
         submitBtn.classList.remove('submitting');
         submitBtn.querySelector('.label').textContent = 'Registration Successfull';
         successNote.classList.remove('show');
-        
+
         localStorage.setItem('user', JSON.stringify(await res.json()));
+
+        window.location.href = '/success.html';
     }
   });
 </script>
