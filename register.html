@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — Shree Garba Beats</title>
+
+<!--
+  Fonts (Google Fonts). No icon library — the only graphic marks on the
+  page (the rangoli line pattern and the dandiya glyph) are hand-built
+  inline SVG, so there's nothing extra to load for icons.
+  - Cormorant Garamond: used ONLY for "Shree Garba Beats" — a refined
+    serif that reads as an event identity rather than a UI heading.
+  - Inter: everything else (form, body, meta) — neutral, highly legible,
+    stays out of the way of the content.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --bg:#141110;
+    --bg-2:#191512;
+    --ivory:#f3ede2;
+    --ivory-dim:#a89e8e;
+    --gold:#c9a15a;
+    --gold-light:#e3c584;
+    --hairline:rgba(201,161,90,0.22);
+    --surface:rgba(255,250,240,0.035);
+    --surface-border:rgba(243,237,226,0.10);
+    --radius:4px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:'Inter', sans-serif;
+    color:var(--ivory);
+    background:
+      radial-gradient(900px 500px at 20% -10%, rgba(201,161,90,0.05), transparent 60%),
+      var(--bg);
+  }
+  h1,h2{ margin:0; }
+  p{ margin:0; }
+  button{ font-family:inherit; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  /* ============ THIN LIGHT STRING (single, restrained) ============ */
+  .lights-strip{ width:100%; height:20px; overflow:hidden; }
+  .lights-strip svg{ width:100%; height:100%; display:block; }
+  .lights-strip .wire{ stroke:var(--hairline); }
+  .lights-strip .bulb{ fill:var(--gold); animation:breathe 7s ease-in-out infinite; }
+  @keyframes breathe{
+    0%,100%{ opacity:.45; }
+    50%{ opacity:.9; }
+  }
+
+  /* ============ LAYOUT ============ */
+  .container{
+    max-width:1080px;
+    margin:0 auto;
+    padding:40px 24px 64px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:1px;
+    opacity:0;
+    transform:translateY(10px);
+  }
+  body.loaded .container{ animation:riseIn .6s var(--ease) forwards; }
+  @keyframes riseIn{ to{ opacity:1; transform:translateY(0); } }
+
+  @media (min-width:960px){
+    .container{
+      grid-template-columns:1fr 1fr;
+      align-items:center;
+      gap:0;
+      min-height:calc(100vh - 20px);
+      padding:0 40px;
+    }
+  }
+
+  /* ============ BRAND PANEL ============ */
+  .brand-panel{
+    position:relative;
+    padding:56px 8px 40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    isolation:isolate;
+  }
+  @media (min-width:960px){
+    .brand-panel{ padding:0 56px 0 0; }
+  }
+
+  /* faint rangoli / concentric line pattern — the one background motif */
+  .rangoli{
+    position:absolute;
+    top:50%; left:50%;
+    width:640px; height:640px;
+    transform:translate(-50%,-50%);
+    z-index:-1;
+    opacity:.07;
+    pointer-events:none;
+  }
+  @media (max-width:959px){ .rangoli{ width:420px; height:420px; opacity:.06; } }
+
+  .mark{
+    width:34px; height:34px;
+    margin-bottom:22px;
+    opacity:.9;
+  }
+
+  .eyebrow{
+    font-size:11.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold-light);
+    margin-bottom:18px;
+  }
+
+  .brand-title{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:clamp(40px, 5.4vw, 58px);
+    letter-spacing:.03em;
+    line-height:1.08;
+    color:var(--ivory);
+    margin-bottom:10px;
+  }
+  .brand-sub{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(17px, 1.8vw, 20px);
+    color:var(--gold-light);
+    margin-bottom:34px;
+  }
+
+  .divider{
+    width:56px; height:1px;
+    background:var(--hairline);
+    margin-bottom:30px;
+  }
+
+  .meta-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .meta-row{
+    display:flex;
+    align-items:baseline;
+    gap:18px;
+    padding-bottom:14px;
+    border-bottom:1px solid rgba(243,237,226,0.07);
+  }
+  .meta-row:last-child{ border-bottom:none; padding-bottom:0; }
+  .meta-label{
+    flex:0 0 96px;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ivory-dim);
+  }
+  .meta-value{
+    font-size:15px;
+    color:var(--ivory);
+    font-weight:500;
+  }
+
+  /* ============ FORM PANEL ============ */
+  .form-panel{
+    display:flex;
+    justify-content:center;
+    padding:8px 8px 40px;
+  }
+  @media (min-width:960px){
+    .form-panel{ padding:0; justify-content:flex-start; }
+  }
+
+  .form-surface{
+    width:100%;
+    max-width:440px;
+    background:var(--surface);
+    border:1px solid var(--surface-border);
+    border-radius:var(--radius);
+    padding:38px 34px;
+  }
+  @media (max-width:479px){
+    .form-surface{ padding:30px 22px; }
+  }
+
+  .form-surface header{ margin-bottom:28px; }
+  .form-surface h2{
+    font-size:20px;
+    font-weight:600;
+    color:var(--ivory);
+    margin-bottom:8px;
+    letter-spacing:.01em;
+  }
+  .form-surface header p{
+    font-size:13.5px;
+    color:var(--ivory-dim);
+    line-height:1.55;
+  }
+
+  form{ display:flex; flex-direction:column; gap:20px; }
+  .field{ display:flex; flex-direction:column; gap:7px; }
+  .field label{
+    font-size:12.5px;
+    font-weight:500;
+    color:var(--ivory-dim);
+    letter-spacing:.01em;
+  }
+  .field .hint{ font-size:11.5px; color:var(--ivory-dim); opacity:.75; }
+
+  .field input,
+  .field select{
+    appearance:none;
+    -webkit-appearance:none;
+    width:100%;
+    padding:11px 2px;
+    font-family:'Inter', sans-serif;
+    font-size:14.5px;
+    color:var(--ivory);
+    background:transparent;
+    border:none;
+    border-bottom:1px solid rgba(243,237,226,0.18);
+    border-radius:0;
+    transition:border-color .2s var(--ease);
+  }
+  .field select{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23c9a15a' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 2px center;
+    padding-right:20px;
+  }
+  .field select option{ color:#141110; }
+
+  .field input::placeholder{ color:rgba(168,158,142,0.55); }
+
+  .field input:hover,
+  .field select:hover{ border-color:rgba(243,237,226,0.32); }
+
+  .field input:focus-visible,
+  .field select:focus-visible{
+    outline:none;
+    border-color:var(--gold);
+  }
+
+  .field.invalid input,
+  .field.invalid select{ border-color:#b5763f; }
+  .field .error-msg{
+    font-size:11.5px; color:#d99a5e;
+    min-height:14px;
+    display:none;
+  }
+  .field.invalid .error-msg{ display:block; }
+
+  .field-row{ display:grid; grid-template-columns:1fr; gap:20px; }
+  @media (min-width:400px){
+    .field-row{ grid-template-columns:1fr 1fr; }
+  }
+
+  /* ============ CTA ============ */
+  .cta{
+    margin-top:8px;
+    padding:14px 22px;
+    border:1px solid var(--gold);
+    border-radius:2px;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.04em;
+    color:var(--bg);
+    background:var(--gold-light);
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:background-color .2s var(--ease), transform .2s var(--ease), gap .2s var(--ease);
+  }
+  .cta .arrow{ transition:transform .2s var(--ease); }
+  .cta:hover{ background:var(--gold); gap:12px; }
+  .cta:hover .arrow{ transform:translateX(2px); }
+  .cta:active{ transform:translateY(1px); }
+  .cta:focus-visible{
+    outline:none;
+    box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--gold);
+  }
+  .cta.submitting{ opacity:.7; cursor:progress; }
+
+  .form-footnote{
+    font-size:11.5px;
+    color:var(--ivory-dim);
+    margin-top:6px;
+  }
+
+  .success-note{
+    display:none;
+    font-size:12.5px;
+    color:var(--gold-light);
+    border-top:1px solid rgba(243,237,226,0.07);
+    padding-top:14px;
+  }
+  .success-note.show{ display:block; }
+</style>
+</head>
+<body>
+
+  <div class="lights-strip" aria-hidden="true">
+    <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+      <path class="wire" d="M0 5 Q 300 16 600 5 T 1200 5" fill="none" stroke-width="1"/>
+      <circle class="bulb" cx="60" cy="9" r="2"/>
+      <circle class="bulb" cx="220" cy="15" r="2"/>
+      <circle class="bulb" cx="380" cy="14" r="2"/>
+      <circle class="bulb" cx="540" cy="8" r="2"/>
+      <circle class="bulb" cx="700" cy="8" r="2"/>
+      <circle class="bulb" cx="860" cy="14" r="2"/>
+      <circle class="bulb" cx="1020" cy="15" r="2"/>
+      <circle class="bulb" cx="1150" cy="6" r="2"/>
+    </svg>
+  </div>
+
+  <div class="container">
+
+    <!-- ============ BRAND PANEL ============ -->
+    <aside class="brand-panel">
+
+      <!-- faint rangoli line pattern — single background motif -->
+      <svg class="rangoli" viewBox="0 0 640 640" aria-hidden="true">
+        <g fill="none" stroke="#c9a15a" stroke-width="1">
+          <circle cx="320" cy="320" r="300"/>
+          <circle cx="320" cy="320" r="230"/>
+          <circle cx="320" cy="320" r="160"/>
+          <circle cx="320" cy="320" r="90"/>
+        </g>
+        <g id="rangoliRays" stroke="#c9a15a" stroke-width="1"></g>
+      </svg>
+
+      <!-- dandiya glyph — the one cultural mark, used like a logotype -->
+      <svg class="mark" viewBox="0 0 34 34" aria-hidden="true">
+        <g stroke="#c9a15a" stroke-width="1.6" stroke-linecap="round">
+          <line x1="7" y1="27" x2="27" y2="7"/>
+          <line x1="7" y1="7" x2="27" y2="27"/>
+        </g>
+        <circle cx="7" cy="27" r="2" fill="#c9a15a"/>
+        <circle cx="27" cy="7" r="2" fill="#c9a15a"/>
+        <circle cx="7" cy="7" r="2" fill="#c9a15a"/>
+        <circle cx="27" cy="27" r="2" fill="#c9a15a"/>
+      </svg>
+
+      <p class="eyebrow">This Navratri · 2026</p>
+      <h1 class="brand-title">Shree Garba Beats</h1>
+      <p class="brand-sub">The Grand Garba Night</p>
+
+      <div class="divider"></div>
+
+      <div class="meta-list">
+        <div class="meta-row">
+          <span class="meta-label">Date</span>
+          <span class="meta-value">October 2026</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Venue</span>
+          <span class="meta-value">Kachnar Club, Jabalpur</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Evening</span>
+          <span class="meta-value">Music · Colour · Tradition</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============ FORM PANEL ============ -->
+    <main class="form-panel">
+      <div class="form-surface">
+        <header>
+          <h2>Reserve your spot</h2>
+          <p>A few details and you're on the list.</p>
+        </header>
+
+        <form method="POST" id="registrationForm" novalidate>
+
+          <div class="field" data-field="name">
+            <label for="name">Enter your name</label>
+            <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name">
+            <span class="error-msg">Please enter your name.</span>
+          </div>
+
+          <div class="field" data-field="phone">
+            <label for="phone">Enter your phone number</label>
+            <input type="tel" id="phone" name="phone" placeholder="80805 55555" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required autocomplete="tel">
+            <span class="hint">10-digit mobile number.</span>
+            <span class="error-msg">Please enter a valid 10-digit phone number.</span>
+          </div>
+
+          <div class="field" data-field="email">
+            <label for="email">Enter your email</label>
+            <input type="email" id="email" name="email" placeholder="john@gmail.com" required autocomplete="email">
+            <span class="error-msg">Please enter a valid email address.</span>
+          </div>
+
+          <div class="field-row">
+            <div class="field" data-field="category">
+              <label for="category">Select your category</label>
+              <select name="category" id="category" required>
+                <option value="" disabled selected>Select category</option>
+                <option value="STAG">Stag</option>
+                <option value="COUPLE">Couple</option>
+                <option value="GROUP">Group</option>
+              </select>
+              <span class="error-msg">Please select a category.</span>
+            </div>
+
+            <div class="field" data-field="workshop_attendee">
+              <label for="workshop_attendee">Attending the workshop?</label>
+              <select name="workshop_attendee" id="workshop_attendee" required>
+                <option value="" disabled selected>Choose</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <span class="error-msg">Please make a selection.</span>
+            </div>
+          </div>
+
+          <button type="submit" class="cta" id="submitBtn">
+            <span class="label">Register Now</span>
+            <span class="arrow">→</span>
+          </button>
+          <div class="success-note" id="successNote">Details confirmed — submitting your registration.</div>
+        </form>
+
+        <p class="form-footnote">Event updates will be shared over WhatsApp and email.</p>
+      </div>
+    </main>
+
+  </div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    document.body.classList.add('loaded');
+  });
+
+  // draw the rangoli's radiating lines procedurally (keeps the SVG source small)
+  (function drawRays() {
+    var group = document.getElementById('rangoliRays');
+    if (!group) return;
+    var cx = 320, cy = 320, count = 24, r1 = 90, r2 = 300;
+    for (var i = 0; i < count; i++) {
+      var angle = (i / count) * Math.PI * 2;
+      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', cx + r1 * Math.cos(angle));
+      line.setAttribute('y1', cy + r1 * Math.sin(angle));
+      line.setAttribute('x2', cx + r2 * Math.cos(angle));
+      line.setAttribute('y2', cy + r2 * Math.sin(angle));
+      group.appendChild(line);
+    }
+  })();
+
+  // lightweight inline validation — feedback only via colour/text, no
+  // motion, so it doesn't distract mid-registration. Never blocks or
+  // alters the real POST submission.
+  var form = document.getElementById('registrationForm');
+  var submitBtn = document.getElementById('submitBtn');
+  var successNote = document.getElementById('successNote');
+
+  function fieldWrap(el) { return el.closest('.field'); }
+
+  function validateField(el) {
+    var wrap = fieldWrap(el);
+    if (!wrap) return true;
+    var valid = el.checkValidity();
+    wrap.classList.toggle('invalid', !valid);
+    return valid;
+  }
+
+  form.querySelectorAll('input, select').forEach(function (el) {
+    el.addEventListener('blur', function () { validateField(el); });
+    el.addEventListener('input', function () {
+      if (fieldWrap(el).classList.contains('invalid')) validateField(el);
+    });
+    el.addEventListener('change', function () {
+      if (fieldWrap(el).classList.contains('invalid')) validateField(el);
+    });
+  });
+
+  form.addEventListener('submit', async function (e) {
+    submitBtn.disabled = true;
+    var allValid = true;
+    form.querySelectorAll('input, select').forEach(function (el) {
+      if (!validateField(el)) allValid = false;
+    });
+
+    if (!allValid) {
+      e.preventDefault();
+      var firstInvalid = form.querySelector('.field.invalid input, .field.invalid select');
+      if (firstInvalid) firstInvalid.focus();
+      submitBtn.disabled = false;
+      return;
+    }
+
+    submitBtn.classList.add('submitting');
+    submitBtn.querySelector('.label').textContent = 'Registering…';
+    successNote.classList.add('show');
+    // form proceeds to submit normally (method="POST") from here
+
+    e.preventDefault();
+    const formData = new FormData(form);
+
+    const formObject = Object.fromEntries(formData.entries());
+
+    console.log(formObject);
+
+    var res = await fetch('http://localhost:9090/users/register',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formObject)
+    });
+
+    if(res.status == 200) {
+        submitBtn.classList.remove('submitting');
+        submitBtn.querySelector('.label').textContent = 'Registration Successfull';
+        successNote.classList.remove('show');
+        
+        localStorage.setItem('user', JSON.stringify(await res.json()));
+    }
+  });
+</script>
+</body>
+</html>
