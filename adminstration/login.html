@@ -9,20 +9,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#141110;
-    --ivory:#f3ede2;
-    --ivory-dim:#a89e8e;
-    --gold:#c9a15a;
-    --gold-light:#e3c584;
-    --hairline:rgba(201,161,90,0.18);
-    --surface:rgba(255,250,240,0.035);
-    --surface-border:rgba(243,237,226,0.10);
-    --error:#c96a5a;
-    --error-bg:rgba(201,106,90,0.08);
-    --error-border:rgba(201,106,90,0.28);
-    --radius:4px;
-    --ease:cubic-bezier(.4,0,.2,1);
-  }
+    --bg:#f6efe4;                          /* was #141110 */
+    --ivory:#362820;                       /* was #f3ede2 → main text */
+    --ivory-dim:#8e7c6a;                   /* was #a89e8e → dim text */
+    --gold:#b9835b;                        /* was #c9a15a → rose-gold */
+    --gold-light:#7a2331;                  /* was #e3c584 → deep wine, primary accent */
+    --hairline:rgba(122,35,49,0.16);       /* was rgba(201,161,90,0.18) */
+    --surface:rgba(255,255,255,0.55);      /* was rgba(255,250,240,0.035) */
+    --surface-border:rgba(54,40,32,0.10);  /* was rgba(243,237,226,0.10) */
+    --error:#a83f2e;                        /* was #c96a5a → darkened terracotta-red so it stays readable as text on cream (the old coral was tuned for a dark background) */
+    --error-bg:rgba(168,63,46,0.10);        /* was rgba(201,106,90,0.08) → same coral family, slightly higher alpha so the banner wash is visible on white */
+    --error-border:rgba(168,63,46,0.30);   /* was rgba(201,106,90,0.28) */
+    --radius:4px;                          /* unchanged */
+    --ease:cubic-bezier(.4,0,.2,1);        /* unchanged */
+    }
   *,*::before,*::after{ box-sizing:border-box; }
   html,body{ overflow-x:hidden; }
   body{
@@ -30,7 +30,7 @@
     font-family:'Inter', sans-serif;
     color:var(--ivory);
     background:
-      radial-gradient(700px 420px at 50% 8%, rgba(201,161,90,0.05), transparent 60%),
+      radial-gradient(700px 420px at 50% 8%, rgba(122,35,49,0.05), transparent 60%),
       var(--bg);
     display:flex; align-items:center; justify-content:center;
     padding:24px;
@@ -97,21 +97,21 @@
   .field input{
     width:100%;
     font-family:inherit; font-size:14px; color:var(--ivory);
-    background:rgba(255,250,240,0.02);
+    background:rgba(54,40,32,0.03);
     border:1px solid var(--surface-border);
     border-radius:var(--radius);
     padding:12px 14px;
     transition:border-color .25s var(--ease), background .25s var(--ease);
   }
-  .field input::placeholder{ color:rgba(168,158,142,0.55); }
+  .field input::placeholder{ color:rgba(142,124,106,0.6); }
   .field input:focus{
-    outline:none; border-color:var(--gold); background:rgba(201,161,90,0.05);
+    outline:none; border-color:var(--gold); background:rgba(122,35,49,0.05)
   }
   .field input:focus-visible{ outline:none; }
   .field input.field-error{ border-color:var(--error); }
 
   .error-banner{
-    display:flex; align-items:center; gap:10px;
+    display:none; align-items:center; gap:10px;
     font-size:12.5px; color:var(--error);
     background:var(--error-bg);
     border:1px solid var(--error-border);
@@ -139,7 +139,7 @@
 
   .spinner{
     width:13px; height:13px; border-radius:50%;
-    border:1.5px solid rgba(20,17,16,0.35);
+    border:1.5px solid rgba(255,255,255,0.35);
     border-top-color:var(--bg);
     animation:spin .7s linear infinite;
     display:none;
@@ -159,7 +159,7 @@
 
 <div class="login-wrap">
   <div class="brand">
-    <svg class="mark" viewBox="0 0 40 40" fill="none" stroke="#c9a15a" stroke-width="1.1">
+    <svg class="mark" viewBox="0 0 40 40" fill="none" stroke="#b9835b" stroke-width="1.1">
       <circle cx="20" cy="20" r="17"/>
       <path d="M20 6 L20 34 M6 20 L34 20" stroke-opacity=".5"/>
     </svg>
@@ -171,7 +171,7 @@
     <h1>Sign in</h1>
     <p class="login-sub">Enter your credentials to access the admin dashboard.</p>
 
-    <div class="error-banner" id="errorBanner" hidden>
+    <div class="error-banner" id="errorBanner" >
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <span id="errorText">Incorrect username or password. Please try again.</span>
     </div>
@@ -212,13 +212,13 @@
 
   function showError(message) {
     errorText.innerText = message;
-    errorBanner.hidden = false;
+    errorBanner.style.display = 'flex';
     usernameEl.classList.add('field-error');
     passwordEl.classList.add('field-error');
   }
 
   function clearError() {
-    errorBanner.hidden = true;
+    errorBanner.style.display = 'none';
     usernameEl.classList.remove('field-error');
     passwordEl.classList.remove('field-error');
   }
@@ -241,7 +241,7 @@
       });
 
       if (res.status == 200) {
-        window.location.href = 'dashboard.html';
+        // window.location.href = 'dashboard.html';
       } else {
         setLoading(false);
         showError('Incorrect username or password. Please try again.');
