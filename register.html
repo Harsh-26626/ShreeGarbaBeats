@@ -21,18 +21,18 @@
 <style>
   /* ============ TOKENS ============ */
   :root{
-    --bg:#141110;
-    --bg-2:#191512;
-    --ivory:#f3ede2;
-    --ivory-dim:#a89e8e;
-    --gold:#c9a15a;
-    --gold-light:#e3c584;
-    --hairline:rgba(201,161,90,0.22);
-    --surface:rgba(255,250,240,0.035);
-    --surface-border:rgba(243,237,226,0.10);
-    --radius:4px;
-    --ease:cubic-bezier(.4,0,.2,1);
-  }
+    --bg:#f6efe4;                          /* was #141110 */
+    --bg-2:#efe0c8;                        /* was #191512 → deeper cream, same role as index's --bg-deep */
+    --ivory:#362820;                       /* was #f3ede2 → now your main text color (deep warm brown) */
+    --ivory-dim:#8e7c6a;                   /* was #a89e8e → dim/secondary text */
+    --gold:#b9835b;                        /* was #c9a15a → rose-gold */
+    --gold-light:#7a2331;                  /* was #e3c584 → deep wine, primary accent (same role-swap as index.html, since buttons pair var(--bg) text on var(--gold-light) background) */
+    --hairline:rgba(122,35,49,0.16);       /* was rgba(201,161,90,0.22) → wine-tinted thin borders */
+    --surface:rgba(255,255,255,0.55);      /* was rgba(255,250,240,0.035) → soft white card lift */
+    --surface-border:rgba(54,40,32,0.10);  /* was rgba(243,237,226,0.10) → dark, low-opacity border */
+    --radius:4px;                          /* unchanged */
+    --ease:cubic-bezier(.4,0,.2,1);        /* unchanged */
+   }
 
   *,*::before,*::after{ box-sizing:border-box; }
   html{ scroll-behavior:smooth; }
@@ -42,7 +42,7 @@
     font-family:'Inter', sans-serif;
     color:var(--ivory);
     background:
-      radial-gradient(900px 500px at 20% -10%, rgba(201,161,90,0.05), transparent 60%),
+      radial-gradient(900px 500px at 20% -10%, rgba(122,35,49,0.05), transparent 60%),
       var(--bg);
   }
   h1,h2{ margin:0; }
@@ -160,7 +160,7 @@
     align-items:baseline;
     gap:18px;
     padding-bottom:14px;
-    border-bottom:1px solid rgba(243,237,226,0.07);
+    border-bottom:1px solid rgba(54,40,32,0.08);
   }
   .meta-row:last-child{ border-bottom:none; padding-bottom:0; }
   .meta-label{
@@ -233,7 +233,7 @@
     color:var(--ivory);
     background:transparent;
     border:none;
-    border-bottom:1px solid rgba(243,237,226,0.18);
+    border-bottom:1px solid rgba(54,40,32,0.18);
     border-radius:0;
     transition:border-color .2s var(--ease);
   }
@@ -243,12 +243,12 @@
     background-position:right 2px center;
     padding-right:20px;
   }
-  .field select option{ color:#141110; }
+  .field select option{ color:#362820; }
 
-  .field input::placeholder{ color:rgba(168,158,142,0.55); }
+  .field input::placeholder{ color:rgba(142,124,106,0.6); }
 
   .field input:hover,
-  .field select:hover{ border-color:rgba(243,237,226,0.32); }
+  .field select:hover{ border-color:rgba(54,40,32,0.32); }
 
   .field input:focus-visible,
   .field select:focus-visible{
@@ -259,7 +259,7 @@
   .field.invalid input,
   .field.invalid select{ border-color:#b5763f; }
   .field .error-msg{
-    font-size:11.5px; color:#d99a5e;
+    font-size:11.5px; color:#a8551f;
     min-height:14px;
     display:none;
   }
@@ -308,7 +308,7 @@
     display:none;
     font-size:12.5px;
     color:var(--gold-light);
-    border-top:1px solid rgba(243,237,226,0.07);
+    border-top:1px solid rgba(54,40,32,0.08);
     padding-top:14px;
   }
   .success-note.show{ display:block; }
@@ -343,19 +343,19 @@
           <circle cx="320" cy="320" r="160"/>
           <circle cx="320" cy="320" r="90"/>
         </g>
-        <g id="rangoliRays" stroke="#c9a15a" stroke-width="1"></g>
+        <g id="rangoliRays" stroke="#b9835b" stroke-width="1"></g>
       </svg>
 
       <!-- dandiya glyph — the one cultural mark, used like a logotype -->
       <svg class="mark" viewBox="0 0 34 34" aria-hidden="true">
-        <g stroke="#c9a15a" stroke-width="1.6" stroke-linecap="round">
+        <g stroke="#b9835b" stroke-width="1.6" stroke-linecap="round">
           <line x1="7" y1="27" x2="27" y2="7"/>
           <line x1="7" y1="7" x2="27" y2="27"/>
         </g>
-        <circle cx="7" cy="27" r="2" fill="#c9a15a"/>
-        <circle cx="27" cy="7" r="2" fill="#c9a15a"/>
-        <circle cx="7" cy="7" r="2" fill="#c9a15a"/>
-        <circle cx="27" cy="27" r="2" fill="#c9a15a"/>
+        <circle cx="7" cy="27" r="2" fill="#b9835b"/>
+        <circle cx="27" cy="7" r="2" fill="#b9835b"/>
+        <circle cx="7" cy="7" r="2" fill="#b9835b"/>
+        <circle cx="27" cy="27" r="2" fill="#b9835b"/>
       </svg>
 
       <p class="eyebrow">This Navratri · 2026</p>
