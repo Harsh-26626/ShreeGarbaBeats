@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shree Garba Beats — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#141110;
+    --ivory:#f3ede2;
+    --ivory-dim:#a89e8e;
+    --gold:#c9a15a;
+    --gold-light:#e3c584;
+    --hairline:rgba(201,161,90,0.18);
+    --surface:rgba(255,250,240,0.03);
+    --surface-border:rgba(243,237,226,0.09);
+    --row-hover:rgba(201,161,90,0.05);
+    --radius:4px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; min-height:100vh;
+    font-family:'Inter', sans-serif;
+    color:var(--ivory);
+    background:var(--bg);
+  }
+  h1,h2{ margin:0; }
+  p{ margin:0; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+  }
+
+  /* ---------- header ---------- */
+  .admin-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px;
+    background:rgba(20,17,16,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--hairline);
+    position:sticky; top:0; z-index:20;
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .wordmark{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600; font-size:17px; letter-spacing:.12em; color:var(--ivory);
+  }
+  .wordmark span{ color:var(--gold-light); }
+  .admin-tag{
+    font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ivory-dim);
+    border:1px solid var(--hairline);
+    padding:3px 8px; border-radius:2px;
+  }
+  .logout-btn{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ivory-dim);
+    background:transparent;
+    border:1px solid var(--surface-border);
+    padding:9px 16px; border-radius:2px;
+    cursor:pointer;
+    transition:color .25s var(--ease), border-color .25s var(--ease);
+    font-family:inherit;
+  }
+  .logout-btn:hover{ color:var(--ivory); border-color:var(--gold); }
+  .logout-btn:focus-visible{ outline:1px solid var(--gold-light); outline-offset:2px; }
+
+  /* ---------- main ---------- */
+  .admin-main{ max-width:1120px; margin:0 auto; padding:48px 28px 90px; }
+
+  .intro-row{
+    display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap;
+    gap:24px; margin-bottom:34px;
+  }
+  .intro-row h1{
+    font-family:'Cormorant Garamond', serif; font-weight:600;
+    font-size:clamp(26px, 3vw, 34px); color:var(--ivory);
+    margin-bottom:8px;
+  }
+  .intro-sub{ font-size:13.5px; color:var(--ivory-dim); }
+  .total-chip{
+    text-align:right; flex:0 0 auto;
+  }
+  .total-chip .num{
+    font-family:'Cormorant Garamond', serif; font-weight:600;
+    font-size:30px; color:var(--gold-light); line-height:1;
+  }
+  .total-chip .label{
+    font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ivory-dim);
+    margin-top:4px;
+  }
+
+  /* ---------- search ---------- */
+  .search-bar{
+    position:relative;
+    max-width:380px;
+    margin-bottom:26px;
+  }
+  .search-bar svg{
+    position:absolute; left:14px; top:50%; transform:translateY(-50%);
+    width:15px; height:15px; stroke:var(--ivory-dim); pointer-events:none;
+  }
+  .search-bar input{
+    width:100%;
+    font-family:inherit; font-size:13.5px; color:var(--ivory);
+    background:var(--surface);
+    border:1px solid var(--surface-border);
+    border-radius:var(--radius);
+    padding:12px 38px 12px 38px;
+    transition:border-color .25s var(--ease), background .25s var(--ease);
+  }
+  .search-bar input::placeholder{ color:var(--ivory-dim); }
+  .search-bar input:focus{
+    outline:none; border-color:var(--gold); background:rgba(201,161,90,0.05);
+  }
+  .search-clear{
+    position:absolute; right:10px; top:50%; transform:translateY(-50%);
+    width:22px; height:22px; border:none; background:transparent; cursor:pointer;
+    color:var(--ivory-dim); font-size:15px; line-height:1;
+    display:none; align-items:center; justify-content:center; border-radius:50%;
+    transition:color .2s var(--ease);
+  }
+  .search-clear:hover{ color:var(--ivory); }
+  .search-clear.visible{ display:flex; }
+
+  /* ---------- table shell ---------- */
+  .table-shell{
+    border:1px solid var(--surface-border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    background:var(--surface);
+  }
+  .table-scroll{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  table{
+    width:100%;
+    min-width:640px;
+    border-collapse:collapse;
+  }
+  thead th{
+    text-align:left;
+    font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--ivory-dim); font-weight:500;
+    background:rgba(255,250,240,0.03);
+    padding:15px 20px;
+    border-bottom:1px solid var(--surface-border);
+    white-space:nowrap;
+  }
+  thead th.col-num{ width:48px; }
+  tbody td{
+    padding:15px 20px;
+    font-size:13.5px; color:var(--ivory);
+    border-bottom:1px solid rgba(243,237,226,0.05);
+    white-space:nowrap;
+  }
+  tbody tr{ transition:background .18s var(--ease); }
+  tbody tr:hover{ background:var(--row-hover); }
+  tbody tr:last-child td{ border-bottom:none; }
+  td.col-num{ color:var(--ivory-dim); font-size:12.5px; }
+  td.col-name{ color:var(--ivory); font-weight:500; }
+
+  /* ---------- states ---------- */
+  .state-panel{
+    padding:64px 24px; text-align:center;
+  }
+  .state-panel h3{
+    font-family:'Cormorant Garamond', serif; font-weight:600; font-size:20px;
+    color:var(--ivory); margin-bottom:8px;
+  }
+  .state-panel p{ font-size:13px; color:var(--ivory-dim); }
+
+  .skeleton-row{
+    display:flex; gap:20px; padding:15px 20px;
+    border-bottom:1px solid rgba(243,237,226,0.05);
+  }
+  .skeleton-cell{
+    height:13px; border-radius:2px;
+    background:linear-gradient(90deg, rgba(243,237,226,0.05) 25%, rgba(243,237,226,0.11) 37%, rgba(243,237,226,0.05) 63%);
+    background-size:400% 100%;
+    animation:shimmer 1.6s ease-in-out infinite;
+  }
+  @keyframes shimmer{ 0%{ background-position:100% 0; } 100%{ background-position:0 0; } }
+
+  [hidden]{ display:none !important; }
+
+  @media (max-width:620px){
+    .admin-header{ padding:14px 18px; }
+    .admin-main{ padding:34px 18px 70px; }
+    .intro-row{ flex-direction:column; align-items:flex-start; }
+    .total-chip{ text-align:left; }
+  }
+</style>
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="brand" onclick="window.location.href='login.html'", style="cursor: pointer ;">
+    <div class="wordmark">SHREE <span>GARBA</span> BEATS</div>
+    <span class="admin-tag">Admin</span>
+  </div>
+  <button class="logout-btn" id="logoutBtn" type="button">
+    Logout <span aria-hidden="true">→</span>
+  </button>
+</header>
+
+<main class="admin-main">
+  <div class="intro-row">
+    <div>
+      <h1>Registered Participants</h1>
+      <p class="intro-sub">Manage and view everyone registered for The Grand Garba Night.</p>
+    </div>
+    <div class="total-chip">
+      <div class="num" id="totalCount">—</div>
+      <div class="label">Total Registrations</div>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" placeholder="Search participants by name..." aria-label="Search participants by name" autocomplete="off">
+    <button class="search-clear" id="searchClear" type="button" aria-label="Clear search">&times;</button>
+  </div>
+
+  <div class="table-shell">
+    <!-- loading state -->
+    <div id="loadingState">
+      <div class="skeleton-row"><div class="skeleton-cell" style="width:20px"></div><div class="skeleton-cell" style="width:26%"></div><div class="skeleton-cell" style="width:30%"></div><div class="skeleton-cell" style="width:18%"></div><div class="skeleton-cell" style="width:14%"></div><div class="skeleton-cell" style="width:14%"></div></div>
+      <div class="skeleton-row"><div class="skeleton-cell" style="width:20px"></div><div class="skeleton-cell" style="width:22%"></div><div class="skeleton-cell" style="width:34%"></div><div class="skeleton-cell" style="width:16%"></div><div class="skeleton-cell" style="width:12%"></div><div class="skeleton-cell" style="width:16%"></div></div>
+      <div class="skeleton-row"><div class="skeleton-cell" style="width:20px"></div><div class="skeleton-cell" style="width:28%"></div><div class="skeleton-cell" style="width:28%"></div><div class="skeleton-cell" style="width:20%"></div><div class="skeleton-cell" style="width:14%"></div><div class="skeleton-cell" style="width:10%"></div></div>
+    </div>
+
+    <!-- no registrations at all -->
+    <div class="state-panel" id="emptyAllState" hidden>
+      <h3>No registrations yet</h3>
+      <p>Registered participants will appear here once someone completes the registration form.</p>
+    </div>
+
+    <!-- no search matches -->
+    <div class="state-panel" id="emptySearchState" hidden>
+      <h3>No participants found</h3>
+      <p id="emptySearchText">No registered user matches your search.</p>
+    </div>
+
+    <!-- data table -->
+    <div class="table-scroll" id="tableScroll" hidden>
+      <table>
+        <thead>
+          <tr>
+            <th class="col-num">#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Category</th>
+            <th>Workshop Attendee</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+  /* ============================================================
+     Existing data contract — unchanged from the original page:
+     GET http://localhost:9090/adminstration/dashboard
+     credentials: include, redirects to "../" on non-200.
+     Column order/fields also unchanged.
+     ============================================================ */
+  const attributes = ['name', 'email', 'phone', 'category', 'workshop_attendee'];
+
+  let allUsers = [];
+
+  const tableBody      = document.querySelector('#usersTableBody');
+  const tableScroll     = document.querySelector('#tableScroll');
+  const loadingState    = document.querySelector('#loadingState');
+  const emptyAllState   = document.querySelector('#emptyAllState');
+  const emptySearchState= document.querySelector('#emptySearchState');
+  const emptySearchText = document.querySelector('#emptySearchText');
+  const totalCountEl    = document.querySelector('#totalCount');
+  const searchInput     = document.querySelector('#searchInput');
+  const searchClear     = document.querySelector('#searchClear');
+
+  function renderRows(users) {
+    tableBody.innerHTML = '';
+    users.forEach((user, i) => {
+      const tr = document.createElement('tr');
+
+      const tdNum = document.createElement('td');
+      tdNum.className = 'col-num';
+      tdNum.innerText = i + 1;
+      tr.appendChild(tdNum);
+
+      attributes.forEach((attribute) => {
+        const td = document.createElement('td');
+        if (attribute === 'name') td.className = 'col-name';
+        td.innerText = user[attribute];
+        tr.appendChild(td);
+      });
+
+      tableBody.appendChild(tr);
+    });
+  }
+
+  function applySearch() {
+    const query = searchInput.value.trim().toLowerCase();
+    searchClear.classList.toggle('visible', query.length > 0);
+
+    const filtered = query
+      ? allUsers.filter(u => (u.name || '').toLowerCase().includes(query))
+      : allUsers;
+
+    if (allUsers.length === 0) {
+      // handled by initial-load state, nothing to do here
+      return;
+    }
+
+    if (filtered.length === 0) {
+      tableScroll.hidden = true;
+      emptySearchState.hidden = false;
+      emptySearchText.innerText = `No registered user matches "${searchInput.value.trim()}".`;
+    } else {
+      emptySearchState.hidden = true;
+      tableScroll.hidden = false;
+      renderRows(filtered);
+    }
+  }
+
+  searchInput.addEventListener('input', applySearch);
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    applySearch();
+    searchInput.focus();
+  });
+
+  // Logout — reuses the existing session/auth pattern (credentials: include).
+  // NOTE: the original page had no logout endpoint defined. Wire this up to
+  // your real logout route (or clear-session mechanism) if the URL below
+  // isn't correct — nothing here is invented data, just a best-guess endpoint
+  // to replace.
+  document.querySelector('#logoutBtn').addEventListener('click', async () => {
+    try {
+      await fetch('https://shreegarbabeatsbackend.onrender.com/adminstration/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (e) {
+      // ignore network errors on logout, still redirect
+    }
+    window.location.href = '../';
+  });
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    var res = await fetch('http://localhost:9090/adminstration/dashboard', {
+      credentials: 'include',
+      method: 'GET'
+    });
+
+    if (res.status == 200) {
+      var userData = await res.json();
+      allUsers = userData;
+
+      loadingState.hidden = true;
+      totalCountEl.innerText = userData.length;
+
+      if (userData.length === 0) {
+        emptyAllState.hidden = false;
+      } else {
+        tableScroll.hidden = false;
+        renderRows(userData);
+      }
+    } else {
+      window.location.href = '../';
+    }
+  });
+</script>
+</body>
+</html>
