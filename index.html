@@ -719,6 +719,69 @@
         color: var(--gold);
       }
 
+      /* ============ EARLY REGISTRATION OFFER ============ */
+      .offer-section {
+        background: var(--bg-deep);
+        border-top: 1px solid var(--hairline);
+        border-bottom: 1px solid var(--hairline);
+        padding: 110px 24px;
+        text-align: center;
+      }
+      .offer-inner {
+        max-width: 720px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .offer-figure {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        font-size: clamp(88px, 16vw, 168px);
+        line-height: 0.95;
+        color: var(--gold-light);
+        letter-spacing: 0.01em;
+      }
+      .offer-figure small {
+        font-size: 0.32em;
+        font-style: italic;
+        font-weight: 500;
+        margin-left: 0.12em;
+        color: var(--gold);
+      }
+      .offer-line {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        font-size: clamp(24px, 3.4vw, 36px);
+        line-height: 1.2;
+        color: var(--ivory);
+        margin: 14px 0 10px;
+      }
+      .offer-sub {
+        font-size: 14.5px;
+        color: var(--ivory-dim);
+        margin-bottom: 34px;
+      }
+      .offer-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--bg);
+        background: var(--gold-light);
+        padding: 15px 30px;
+        border-radius: 2px;
+        transition:
+          background 0.3s var(--ease),
+          transform 0.3s var(--ease);
+      }
+      .offer-cta:hover {
+        background: var(--gold);
+        transform: translateY(-1px);
+      }
+
       /* ============ INSTAGRAM SECTION ============ */
       .insta-card {
         display: flex;
@@ -1140,6 +1203,16 @@
             <span class="contact-num">95892 55038</span>
           </a>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ EARLY REGISTRATION OFFER ============ -->
+    <section class="offer-section" id="offer">
+      <div class="offer-inner reveal">
+        <div class="offer-figure">20%<small>off</small></div>
+        <p class="offer-line">For the first 100 registrations</p>
+        <p class="offer-sub">Register early and save on your Garba pass.</p>
+        <a class="offer-cta" href="register.html">Register now →</a>
       </div>
     </section>
 
