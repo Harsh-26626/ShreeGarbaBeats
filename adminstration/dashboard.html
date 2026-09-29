@@ -9,17 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f6efe4;                          /* was #141110 */
-    --ivory:#362820;                       /* was #f3ede2 → main text */
-    --ivory-dim:#8e7c6a;                   /* was #a89e8e → dim text */
-    --gold:#b9835b;                        /* was #c9a15a → rose-gold */
-    --gold-light:#7a2331;                  /* was #e3c584 → deep wine, primary accent */
-    --hairline:rgba(122,35,49,0.16);       /* was rgba(201,161,90,0.18) */
-    --surface:rgba(255,255,255,0.55);      /* was rgba(255,250,240,0.03) */
-    --surface-border:rgba(54,40,32,0.10);  /* was rgba(243,237,226,0.09) */
-    --row-hover:rgba(122,35,49,0.05);      /* was rgba(201,161,90,0.05) → faint wine tint on row hover instead of gold */
-    --radius:4px;                          /* unchanged */
-    --ease:cubic-bezier(.4,0,.2,1);        /* unchanged */
+    --bg:#f6efe4;
+    --ivory:#362820;
+    --ivory-dim:#8e7c6a;
+    --gold:#b9835b;
+    --gold-light:#7a2331;
+    --hairline:rgba(122,35,49,0.16);
+    --surface:rgba(255,255,255,0.55);
+    --surface-border:rgba(54,40,32,0.10);
+    --row-hover:rgba(122,35,49,0.05);
+    --danger:#a3262a;
+    --radius:4px;
+    --ease:cubic-bezier(.4,0,.2,1);
   }
   *,*::before,*::after{ box-sizing:border-box; }
   html,body{ overflow-x:hidden; }
@@ -45,7 +46,7 @@
     border-bottom:1px solid var(--hairline);
     position:sticky; top:0; z-index:20;
   }
-  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .brand{ display:flex; align-items:baseline; gap:10px; cursor:pointer; }
   .wordmark{
     font-family:'Cormorant Garamond', serif;
     font-weight:600; font-size:17px; letter-spacing:.12em; color:var(--ivory);
@@ -84,9 +85,7 @@
     margin-bottom:8px;
   }
   .intro-sub{ font-size:13.5px; color:var(--ivory-dim); }
-  .total-chip{
-    text-align:right; flex:0 0 auto;
-  }
+  .total-chip{ text-align:right; flex:0 0 auto; }
   .total-chip .num{
     font-family:'Cormorant Garamond', serif; font-weight:600;
     font-size:30px; color:var(--gold-light); line-height:1;
@@ -97,11 +96,7 @@
   }
 
   /* ---------- search ---------- */
-  .search-bar{
-    position:relative;
-    max-width:380px;
-    margin-bottom:26px;
-  }
+  .search-bar{ position:relative; max-width:380px; margin-bottom:26px; }
   .search-bar svg{
     position:absolute; left:14px; top:50%; transform:translateY(-50%);
     width:15px; height:15px; stroke:var(--ivory-dim); pointer-events:none;
@@ -116,9 +111,7 @@
     transition:border-color .25s var(--ease), background .25s var(--ease);
   }
   .search-bar input::placeholder{ color:var(--ivory-dim); }
-  .search-bar input:focus{
-    outline:none; border-color:var(--gold); background:rgba(122,35,49,0.04);
-  }
+  .search-bar input:focus{ outline:none; border-color:var(--gold); background:rgba(122,35,49,0.04); }
   .search-clear{
     position:absolute; right:10px; top:50%; transform:translateY(-50%);
     width:22px; height:22px; border:none; background:transparent; cursor:pointer;
@@ -136,15 +129,8 @@
     overflow:hidden;
     background:var(--surface);
   }
-  .table-scroll{
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-  table{
-    width:100%;
-    min-width:640px;
-    border-collapse:collapse;
-  }
+  .table-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  table{ width:100%; min-width:960px; border-collapse:collapse; }
   thead th{
     text-align:left;
     font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
@@ -155,32 +141,63 @@
     white-space:nowrap;
   }
   thead th.col-num{ width:48px; }
+  thead th.col-actions{ text-align:right; }
   tbody td{
     padding:15px 20px;
     font-size:13.5px; color:var(--ivory);
     border-bottom:1px solid rgba(54,40,32,0.07);
     white-space:nowrap;
+    vertical-align:middle;
   }
   tbody tr{ transition:background .18s var(--ease); }
   tbody tr:hover{ background:var(--row-hover); }
   tbody tr:last-child td{ border-bottom:none; }
+  tbody tr.is-editing{ background:rgba(185,131,91,0.10); }
   td.col-num{ color:var(--ivory-dim); font-size:12.5px; }
   td.col-name{ color:var(--ivory); font-weight:500; }
+  td.col-actions{ text-align:right; }
+
+  /* ---------- row action buttons ---------- */
+  .row-actions{ display:inline-flex; gap:8px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:inherit; font-size:11px; letter-spacing:.06em; text-transform:uppercase; font-weight:500;
+    padding:7px 12px; border-radius:2px; cursor:pointer;
+    background:transparent; color:var(--ivory-dim);
+    border:1px solid var(--surface-border);
+    transition:color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .btn svg{ width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .btn:hover{ color:var(--ivory); border-color:var(--gold); }
+  .btn:focus-visible{ outline:1px solid var(--gold-light); outline-offset:2px; }
+  .btn:disabled{ opacity:.5; cursor:not-allowed; }
+  .btn-primary{ background:var(--gold-light); border-color:var(--gold-light); color:#fff; }
+  .btn-primary:hover{ background:#5f1a26; border-color:#5f1a26; color:#fff; }
+  .btn-danger{ color:var(--danger); border-color:rgba(163,38,42,0.30); }
+  .btn-danger:hover{ color:#fff; background:var(--danger); border-color:var(--danger); }
+
+  /* ---------- inline edit fields ---------- */
+  .edit-input{
+    width:100%; min-width:110px;
+    font-family:inherit; font-size:13px; color:var(--ivory);
+    background:#fffdf9;
+    border:1px solid var(--gold);
+    border-radius:3px;
+    padding:8px 10px;
+    transition:box-shadow .2s var(--ease), border-color .2s var(--ease);
+  }
+  .edit-input:focus{ outline:none; border-color:var(--gold-light); box-shadow:0 0 0 3px rgba(122,35,49,0.12); }
+  .edit-input.invalid{ border-color:var(--danger); box-shadow:0 0 0 3px rgba(163,38,42,0.12); }
 
   /* ---------- states ---------- */
-  .state-panel{
-    padding:64px 24px; text-align:center;
-  }
+  .state-panel{ padding:64px 24px; text-align:center; }
   .state-panel h3{
     font-family:'Cormorant Garamond', serif; font-weight:600; font-size:20px;
     color:var(--ivory); margin-bottom:8px;
   }
   .state-panel p{ font-size:13px; color:var(--ivory-dim); }
 
-  .skeleton-row{
-    display:flex; gap:20px; padding:15px 20px;
-    border-bottom:1px solid rgba(54,40,32,0.07);
-  }
+  .skeleton-row{ display:flex; gap:20px; padding:15px 20px; border-bottom:1px solid rgba(54,40,32,0.07); }
   .skeleton-cell{
     height:13px; border-radius:2px;
     background:linear-gradient(90deg, rgba(54,40,32,0.06) 25%, rgba(54,40,32,0.14) 37%, rgba(54,40,32,0.06) 63%);
@@ -188,6 +205,35 @@
     animation:shimmer 1.6s ease-in-out infinite;
   }
   @keyframes shimmer{ 0%{ background-position:100% 0; } 100%{ background-position:0 0; } }
+
+  /* ---------- delete confirm modal ---------- */
+  .modal-backdrop{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(54,40,32,0.45);
+    backdrop-filter:blur(3px);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px;
+    animation:fadeIn .2s var(--ease);
+  }
+  .modal{
+    width:100%; max-width:420px;
+    background:#fbf6ee;
+    border:1px solid var(--hairline);
+    border-radius:6px;
+    padding:28px 26px 22px;
+    box-shadow:0 20px 50px rgba(54,40,32,0.25);
+    animation:popIn .22s var(--ease);
+  }
+  .modal h3{
+    font-family:'Cormorant Garamond', serif; font-weight:600; font-size:22px;
+    color:var(--ivory); margin:0 0 10px;
+  }
+  .modal p{ font-size:13.5px; line-height:1.55; color:var(--ivory-dim); }
+  .modal p strong{ color:var(--ivory); font-weight:600; }
+  .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:24px; }
+  .modal-actions .btn{ padding:9px 16px; font-size:12px; }
+  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes popIn{ from{ opacity:0; transform:translateY(8px) scale(.98); } to{ opacity:1; transform:none; } }
 
   [hidden]{ display:none !important; }
 
@@ -202,7 +248,7 @@
 <body>
 
 <header class="admin-header">
-  <div class="brand" onclick="window.location.href='login.html'", style="cursor: pointer ;">
+  <div class="brand" onclick="window.location.href='login.html'">
     <div class="wordmark">SHREE <span>GARBA</span> BEATS</div>
     <span class="admin-tag">Admin</span>
   </div>
@@ -260,6 +306,7 @@
             <th>Phone</th>
             <th>Category</th>
             <th>Workshop Attendee</th>
+            <th class="col-actions">Actions</th>
           </tr>
         </thead>
         <tbody id="usersTableBody"></tbody>
@@ -268,18 +315,45 @@
   </div>
 </main>
 
+<!-- delete confirmation modal -->
+<div class="modal-backdrop" id="deleteModal" hidden role="dialog" aria-modal="true" aria-labelledby="deleteTitle" aria-describedby="deleteText">
+  <div class="modal">
+    <h3 id="deleteTitle">Delete this registration?</h3>
+    <p id="deleteText"></p>
+    <div class="modal-actions">
+      <button class="btn" id="deleteCancelBtn" type="button">Cancel</button>
+      <button class="btn btn-danger" id="deleteConfirmBtn" type="button">Yes, delete</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  /* ============================================================
-     Existing data contract — unchanged from the original page:
-     GET http://localhost:9090/adminstration/dashboard
-     credentials: include, redirects to "../" on non-200.
-     Column order/fields also unchanged.
-     ============================================================ */
   const attributes = ['name', 'email', 'phone', 'category', 'workshop_attendee'];
 
-  let allUsers = [];
+  // Input type per editable field
+  const inputTypes = { name:'text', email:'email', phone:'tel' };
 
-  const tableBody      = document.querySelector('#usersTableBody');
+  // Category is an ENUM on the backend — same values as register.html
+  const categoryOptions = [
+    ['GENERAL', 'General Entry - ₹300'],
+    ['STAG',    'Stag - ₹600'],
+    ['COUPLE',  'Couple - ₹1100'],
+    ['GROUP_5',   'Group of 5 - ₹2500'],
+    ['GROUP_10',  'Group of 10 - / ₹4500']
+  ];
+
+  const ICON_EDIT   = '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+  const ICON_DELETE = '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>';
+  const ICON_SAVE   = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+  const ICON_CANCEL = '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+  let allUsers = [];
+  let editingUser = null;   // the user object currently being edited (reference into allUsers)
+  let draft = null;         // working copy of the values while editing
+  let isSaving = false;
+  let pendingDeleteUser = null;
+
+  const tableBody       = document.querySelector('#usersTableBody');
   const tableScroll     = document.querySelector('#tableScroll');
   const loadingState    = document.querySelector('#loadingState');
   const emptyAllState   = document.querySelector('#emptyAllState');
@@ -289,10 +363,138 @@
   const searchInput     = document.querySelector('#searchInput');
   const searchClear     = document.querySelector('#searchClear');
 
+  const deleteModal      = document.querySelector('#deleteModal');
+  const deleteText       = document.querySelector('#deleteText');
+  const deleteCancelBtn  = document.querySelector('#deleteCancelBtn');
+  const deleteConfirmBtn = document.querySelector('#deleteConfirmBtn');
+
+  /* ============================================================
+     SERVER HOOKS — fill these in with your fetch requests.
+     The UI has already been updated by the time these run
+     (optimistic update). For edit: if this function throws, the
+     row is rolled back to its old values. For delete: if it
+     throws, the record is put back in its old position.
+     ============================================================ */
+
+  // originalUser = values before the edit, updatedUser = new values
+  async function updateUserOnServer(originalUser, updatedUser) {
+    try {
+      const res = await fetch("https://shreegarbabeatsbackend.onrender.com/users/edit", {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          'Content-Type': "application/json"
+        },
+        body: JSON.stringify(updatedUser)
+      });
+
+      if(!res.ok) {
+        throw new Error('HTTP ERROR: ' + res.status);
+      }
+    } catch(e) {
+      throw e;
+    }
+  }
+
+  // user = the record being deleted
+  async function deleteUserOnServer(user) {
+    try {
+      const res = await fetch("https://shreegarbabeatsbackend.onrender.com/users/delete/"+ user["userId"], {
+        method: "DELETE",
+        credentials: "include"
+      });
+
+      if(!res.ok) {
+        throw new Error('HTTP ERROR: ' + res.status);
+      }
+    } catch(e) {
+      throw e;
+    }
+  }
+
+  /* ---------- helpers ---------- */
+
+  // Workshop field: render a Yes/No dropdown if the value is boolean or a yes/no string
+  function isYesNo(v) {
+    return typeof v === 'boolean' || ['yes', 'no'].includes(String(v).toLowerCase());
+  }
+
+  function buildEditControl(attribute, value) {
+    let control;
+ 
+    if (attribute === 'category') {
+      control = document.createElement('select');
+      categoryOptions.forEach(([val, label]) => {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = label;
+        control.appendChild(opt);
+      });
+      // if the stored value isn't in the list, keep it as an option so it isn't silently changed
+      if (value && !categoryOptions.some(([val]) => val === value)) {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = value;
+        control.appendChild(opt);
+      }
+      control.value = value ?? '';
+      control.addEventListener('change', () => {
+        draft[attribute] = control.value;
+      });
+    } else if (attribute === 'workshop_attendee' && isYesNo(value)) {
+      control = document.createElement('select');
+      const isBool = typeof value === 'boolean';
+      [['Yes', isBool ? true : 'Yes'], ['No', isBool ? false : 'No']].forEach(([label, val]) => {
+        const opt = document.createElement('option');
+        opt.value = String(val);
+        opt.textContent = label;
+        control.appendChild(opt);
+      });
+      control.value = String(isBool ? value : (String(value).toLowerCase() === 'yes' ? 'Yes' : 'No'));
+      control.addEventListener('change', () => {
+        draft[attribute] = isBool ? control.value === 'true' : control.value;
+      });
+    } else {
+      control = document.createElement('input');
+      control.type = inputTypes[attribute] || 'text';
+      control.value = value ?? '';
+      control.autocomplete = 'off';
+      control.addEventListener('input', () => {
+        draft[attribute] = control.value;
+        control.classList.remove('invalid');
+      });
+    }
+ 
+    control.className = 'edit-input';
+    control.setAttribute('aria-label', attribute.replace('_', ' '));
+    control.dataset.field = attribute;
+ 
+    control.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); saveEdit(); }
+      if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
+    });
+    return control;
+  }
+
+  function makeButton(label, icon, extraClass, onClick) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn ' + (extraClass || '');
+    btn.innerHTML = icon + '<span>' + label + '</span>';
+    btn.addEventListener('click', onClick);
+    return btn;
+  }
+
+  /* ---------- rendering ---------- */
+
   function renderRows(users) {
     tableBody.innerHTML = '';
+
     users.forEach((user, i) => {
       const tr = document.createElement('tr');
+      tr.dataset.id = user["userId"];
+      const editing = user === editingUser;
+      if (editing) tr.classList.add('is-editing');
 
       const tdNum = document.createElement('td');
       tdNum.className = 'col-num';
@@ -301,27 +503,51 @@
 
       attributes.forEach((attribute) => {
         const td = document.createElement('td');
-        if (attribute === 'name') td.className = 'col-name';
-        td.innerText = user[attribute];
+        if (editing) {
+          td.appendChild(buildEditControl(attribute, draft[attribute]));
+        } else {
+          if (attribute === 'name') td.className = 'col-name';
+          td.innerText = user[attribute];
+        }
         tr.appendChild(td);
       });
 
+      const tdActions = document.createElement('td');
+      tdActions.className = 'col-actions';
+      const wrap = document.createElement('div');
+      wrap.className = 'row-actions';
+
+      if (editing) {
+        wrap.appendChild(makeButton('Save', ICON_SAVE, 'btn-primary', saveEdit));
+        wrap.appendChild(makeButton('Cancel', ICON_CANCEL, '', cancelEdit));
+      } else {
+        wrap.appendChild(makeButton('Edit', ICON_EDIT, '', () => startEdit(user)));
+        wrap.appendChild(makeButton('Delete', ICON_DELETE, 'btn-danger', () => openDeleteModal(user)));
+      }
+
+      tdActions.appendChild(wrap);
+      tr.appendChild(tdActions);
       tableBody.appendChild(tr);
     });
   }
 
-  function applySearch() {
+  // Re-draws the whole view: total count, empty states, search filter, rows.
+  function refreshView() {
     const query = searchInput.value.trim().toLowerCase();
     searchClear.classList.toggle('visible', query.length > 0);
+    totalCountEl.innerText = allUsers.length;
+
+    if (allUsers.length === 0) {
+      tableScroll.hidden = true;
+      emptySearchState.hidden = true;
+      emptyAllState.hidden = false;
+      return;
+    }
+    emptyAllState.hidden = true;
 
     const filtered = query
       ? allUsers.filter(u => (u.name || '').toLowerCase().includes(query))
       : allUsers;
-
-    if (allUsers.length === 0) {
-      // handled by initial-load state, nothing to do here
-      return;
-    }
 
     if (filtered.length === 0) {
       tableScroll.hidden = true;
@@ -334,18 +560,122 @@
     }
   }
 
-  searchInput.addEventListener('input', applySearch);
+  /* ---------- edit flow ---------- */
+
+  function startEdit(user) {
+    if (isSaving) return;
+    editingUser = user;              // only one row is editable at a time
+    draft = { ...user };
+    refreshView();
+    const first = tableBody.querySelector('.edit-input');
+    if (first) first.focus();
+  }
+
+  function cancelEdit() {
+    if (isSaving) return;
+    editingUser = null;
+    draft = null;
+    refreshView();
+  }
+
+  async function saveEdit() {
+    if (!editingUser || isSaving) return;
+
+    // minimal validation: name can't be empty
+    if (!String(draft.name ?? '').trim()) {
+      const nameInput = tableBody.querySelector('.edit-input[data-field="name"]');
+      if (nameInput) { nameInput.classList.add('invalid'); nameInput.focus(); }
+      return;
+    }
+
+    const user = editingUser;
+    const originalUser = { ...user };
+    const updatedUser  = { ...user, ...draft };
+
+    // 1) update the frontend immediately
+    Object.assign(user, updatedUser);
+    editingUser = null;
+    draft = null;
+    refreshView();
+
+    // 2) sync with the server in the background
+    isSaving = true;
+    try {
+      await updateUserOnServer(originalUser, updatedUser);
+    } catch (err) {
+      console.error('Update failed, rolling back:', err);
+      Object.assign(user, originalUser);
+      refreshView();
+      alert('Could not save changes. The row has been restored.');
+    } finally {
+      isSaving = false;
+    }
+  }
+
+  /* ---------- delete flow ---------- */
+
+  function openDeleteModal(user) {
+    if (isSaving) return;
+    pendingDeleteUser = user;
+    deleteText.innerHTML = '';
+    deleteText.append(
+      'This will permanently remove ',
+      Object.assign(document.createElement('strong'), { textContent: user.name || 'this participant' }),
+      ' from the registrations. This action cannot be undone.'
+    );
+    deleteModal.hidden = false;
+    deleteCancelBtn.focus();
+  }
+
+  function closeDeleteModal() {
+    deleteModal.hidden = true;
+    pendingDeleteUser = null;
+  }
+
+  async function confirmDelete() {
+    const user = pendingDeleteUser;
+    if (!user) return;
+    closeDeleteModal();
+
+    const index = allUsers.indexOf(user);
+    if (index === -1) return;
+
+    // if the row being deleted was mid-edit, drop the edit state
+    if (editingUser === user) { editingUser = null; draft = null; }
+
+    // 1) remove from the frontend immediately
+    allUsers.splice(index, 1);
+    refreshView();
+
+    // 2) sync with the server in the background
+    try {
+      await deleteUserOnServer(user);
+    } catch (err) {
+      console.error('Delete failed, restoring record:', err);
+      allUsers.splice(index, 0, user);
+      refreshView();
+      alert('Could not delete the record on the server. It has been restored.');
+    }
+  }
+
+  deleteCancelBtn.addEventListener('click', closeDeleteModal);
+  deleteConfirmBtn.addEventListener('click', confirmDelete);
+  deleteModal.addEventListener('click', (e) => { if (e.target === deleteModal) closeDeleteModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !deleteModal.hidden) closeDeleteModal();
+  });
+
+  /* ---------- search ---------- */
+
+  searchInput.addEventListener('input', refreshView);
   searchClear.addEventListener('click', () => {
     searchInput.value = '';
-    applySearch();
+    refreshView();
     searchInput.focus();
   });
 
-  // Logout — reuses the existing session/auth pattern (credentials: include).
-  // NOTE: the original page had no logout endpoint defined. Wire this up to
-  // your real logout route (or clear-session mechanism) if the URL below
-  // isn't correct — nothing here is invented data, just a best-guess endpoint
-  // to replace.
+  /* ---------- logout ---------- */
+
   document.querySelector('#logoutBtn').addEventListener('click', async () => {
     try {
       await fetch('https://shreegarbabeatsbackend.onrender.com/adminstration/logout', {
@@ -358,6 +688,8 @@
     window.location.href = '../';
   });
 
+  /* ---------- initial load ---------- */
+
   document.addEventListener('DOMContentLoaded', async () => {
     var res = await fetch('https://shreegarbabeatsbackend.onrender.com/adminstration/dashboard', {
       credentials: 'include',
@@ -365,18 +697,9 @@
     });
 
     if (res.status == 200) {
-      var userData = await res.json();
-      allUsers = userData;
-
+      allUsers = await res.json();
       loadingState.hidden = true;
-      totalCountEl.innerText = userData.length;
-
-      if (userData.length === 0) {
-        emptyAllState.hidden = false;
-      } else {
-        tableScroll.hidden = false;
-        renderRows(userData);
-      }
+      refreshView();
     } else {
       window.location.href = '../';
     }
