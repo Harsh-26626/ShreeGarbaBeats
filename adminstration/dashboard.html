@@ -235,6 +235,64 @@
   @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
   @keyframes popIn{ from{ opacity:0; transform:translateY(8px) scale(.98); } to{ opacity:1; transform:none; } }
 
+  /* ---------- header actions ---------- */
+  .header-actions{ display:flex; align-items:center; gap:10px; }
+  .register-btn{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+    color:#fff; background:var(--gold-light);
+    border:1px solid var(--gold-light);
+    padding:9px 16px; border-radius:2px;
+    cursor:pointer;
+    transition:background .25s var(--ease), border-color .25s var(--ease);
+    font-family:inherit;
+  }
+  .register-btn:hover{ background:#5f1a26; border-color:#5f1a26; }
+  .register-btn:focus-visible{ outline:1px solid var(--gold-light); outline-offset:2px; }
+
+  /* ---------- register user modal + form ---------- */
+  .modal-wide{ max-width:520px; max-height:calc(100vh - 40px); overflow-y:auto; }
+  .modal-sub{ margin-bottom:22px; }
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block; margin-bottom:7px;
+    font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--ivory-dim); font-weight:500;
+  }
+  .field input, .field select{
+    width:100%;
+    font-family:inherit; font-size:13.5px; color:var(--ivory);
+    background:#fffdf9;
+    border:1px solid var(--surface-border);
+    border-radius:3px;
+    padding:11px 12px;
+    transition:border-color .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .field input::placeholder{ color:#b7a998; }
+  .field input:focus, .field select:focus{
+    outline:none; border-color:var(--gold-light); box-shadow:0 0 0 3px rgba(122,35,49,0.12);
+  }
+  .field .hint{ display:block; margin-top:6px; font-size:11.5px; color:var(--ivory-dim); }
+  .field .error-msg{ display:none; margin-top:6px; font-size:11.5px; color:var(--danger); }
+  .field.invalid input, .field.invalid select{
+    border-color:var(--danger); box-shadow:0 0 0 3px rgba(163,38,42,0.10);
+  }
+  .field.invalid .error-msg{ display:block; }
+  .field.invalid .hint{ display:none; }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .form-error{
+    font-size:12.5px; color:var(--danger);
+    background:rgba(163,38,42,0.07);
+    border:1px solid rgba(163,38,42,0.25);
+    border-radius:3px; padding:10px 12px; margin-bottom:6px;
+  }
+  @media (max-width:520px){ .field-row{ grid-template-columns:1fr; } }
+  @media (max-width:620px){
+    .admin-header{ flex-wrap:wrap; gap:12px; }
+    .header-actions{ gap:8px; }
+    .register-btn, .logout-btn{ padding:8px 12px; font-size:11px; }
+  }
+
   [hidden]{ display:none !important; }
 
   @media (max-width:620px){
@@ -252,9 +310,14 @@
     <div class="wordmark">SHREE <span>GARBA</span> BEATS</div>
     <span class="admin-tag">Admin</span>
   </div>
-  <button class="logout-btn" id="logoutBtn" type="button">
-    Logout <span aria-hidden="true">→</span>
-  </button>
+  <div class="header-actions">
+    <button class="register-btn" id="openRegisterBtn" type="button">
+      <span aria-hidden="true">+</span> Register User
+    </button>
+    <button class="logout-btn" id="logoutBtn" type="button">
+      Logout <span aria-hidden="true">→</span>
+    </button>
+  </div>
 </header>
 
 <main class="admin-main">
@@ -327,6 +390,67 @@
   </div>
 </div>
 
+<!-- register user modal -->
+<div class="modal-backdrop" id="registerModal" hidden role="dialog" aria-modal="true" aria-labelledby="registerTitle">
+  <div class="modal modal-wide">
+    <h3 id="registerTitle">Register a new user</h3>
+    <p class="modal-sub">Create a registration on behalf of a participant.</p>
+
+    <form id="registerForm" novalidate>
+      <div class="field" data-field="name">
+        <label for="rg-name">Name</label>
+        <input type="text" id="rg-name" name="name" placeholder="John Doe" required autocomplete="off">
+        <span class="error-msg">Please enter a name.</span>
+      </div>
+
+      <div class="field" data-field="phone">
+        <label for="rg-phone">Phone number</label>
+        <input type="tel" id="rg-phone" name="phone" placeholder="80805 55555" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required autocomplete="off">
+        <span class="hint">10-digit mobile number.</span>
+        <span class="error-msg">Please enter a valid 10-digit phone number.</span>
+      </div>
+
+      <div class="field" data-field="email">
+        <label for="rg-email">Email</label>
+        <input type="email" id="rg-email" name="email" placeholder="john@gmail.com" required autocomplete="off">
+        <span class="error-msg">Please enter a valid email address.</span>
+      </div>
+
+      <div class="field-row">
+        <div class="field" data-field="category">
+          <label for="rg-category">Category</label>
+          <select name="category" id="rg-category" required>
+            <option value="" disabled selected>Select category</option>
+            <option value="GENERAL">General Entry - ₹300</option>
+            <option value="STAG">Stag - ₹600</option>
+            <option value="COUPLE">Couple - ₹1100</option>
+            <option value="GROUP_5">Group of 5 - ₹2500</option>
+            <option value="GROUP_10">Group of 10 - ₹4500</option>
+          </select>
+          <span class="error-msg">Please select a category.</span>
+        </div>
+
+        <div class="field" data-field="workshop_attendee">
+          <label for="rg-workshop">Attending the free workshop?</label>
+          <select name="workshop_attendee" id="rg-workshop" required>
+            <option value="" disabled selected>Choose</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+          <span class="error-msg">Please make a selection.</span>
+        </div>
+      </div>
+
+      <div class="form-error" id="registerError" hidden></div>
+
+      <div class="modal-actions">
+        <button class="btn" id="registerCancelBtn" type="button">Cancel</button>
+        <button class="btn btn-primary" id="registerSubmitBtn" type="submit"><span>Register user</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
   const attributes = ['name', 'email', 'phone', 'category', 'workshop_attendee'];
 
@@ -338,8 +462,8 @@
     ['GENERAL', 'General Entry - ₹300'],
     ['STAG',    'Stag - ₹600'],
     ['COUPLE',  'Couple - ₹1100'],
-    ['GROUP_5',   'Group of 5 - ₹2500'],
-    ['GROUP_10',  'Group of 10 - / ₹4500']
+    ['GROUP_5',  'Group of 5 - ₹2500'],
+    ['GROUP_10', 'Group of 10 - ₹4500']
   ];
 
   const ICON_EDIT   = '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
@@ -421,7 +545,7 @@
 
   function buildEditControl(attribute, value) {
     let control;
- 
+
     if (attribute === 'category') {
       control = document.createElement('select');
       categoryOptions.forEach(([val, label]) => {
@@ -464,11 +588,11 @@
         control.classList.remove('invalid');
       });
     }
- 
+
     control.className = 'edit-input';
     control.setAttribute('aria-label', attribute.replace('_', ' '));
     control.dataset.field = attribute;
- 
+
     control.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); saveEdit(); }
       if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
@@ -663,6 +787,136 @@
   deleteModal.addEventListener('click', (e) => { if (e.target === deleteModal) closeDeleteModal(); });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !deleteModal.hidden) closeDeleteModal();
+  });
+
+  /* ---------- register user flow ---------- */
+
+  const registerModal     = document.querySelector('#registerModal');
+  const registerForm      = document.querySelector('#registerForm');
+  const registerError     = document.querySelector('#registerError');
+  const registerSubmitBtn = document.querySelector('#registerSubmitBtn');
+  const registerCancelBtn = document.querySelector('#registerCancelBtn');
+  const openRegisterBtn   = document.querySelector('#openRegisterBtn');
+  let isRegistering = false;
+
+  function validateField(el) {
+    const wrap = el.closest('.field');
+    if (!wrap) return true;
+    const valid = el.checkValidity();
+    wrap.classList.toggle('invalid', !valid);
+    return valid;
+  }
+
+  registerForm.querySelectorAll('input, select').forEach((el) => {
+    el.addEventListener('blur', () => validateField(el));
+    ['input', 'change'].forEach((evt) => {
+      el.addEventListener(evt, () => {
+        if (el.closest('.field').classList.contains('invalid')) validateField(el);
+      });
+    });
+  });
+
+  // phone: digits only
+  registerForm.elements['phone'].addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '');
+  });
+
+  function setRegisterBusy(busy) {
+    isRegistering = busy;
+    registerSubmitBtn.disabled = busy;
+    registerCancelBtn.disabled = busy;
+    registerSubmitBtn.querySelector('span').textContent = busy ? 'Registering…' : 'Register user';
+  }
+
+  function resetRegisterForm() {
+    registerForm.reset();
+    registerForm.querySelectorAll('.field.invalid').forEach((f) => f.classList.remove('invalid'));
+    registerError.hidden = true;
+    setRegisterBusy(false);
+  }
+
+  function openRegisterModal() {
+    if (isSaving) return;
+    if (editingUser) cancelEdit();   // don't leave a half-edited row behind the modal
+    resetRegisterForm();
+    registerModal.hidden = false;
+    registerForm.elements['name'].focus();
+  }
+
+  function closeRegisterModal() {
+    if (isRegistering) return;
+    registerModal.hidden = true;
+  }
+
+  // re-fetch the list from the server (fallback if the register response has no userId)
+  async function reloadUsers() {
+    const res = await fetch('https://shreegarbabeatsbackend.onrender.com/adminstration/dashboard', {
+      credentials: 'include',
+      method: 'GET'
+    });
+    if (res.status !== 200) { window.location.href = '../'; return; }
+    allUsers = await res.json();
+    editingUser = null;
+    draft = null;
+  }
+
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (isRegistering) return;
+    registerError.hidden = true;
+
+    let allValid = true;
+    registerForm.querySelectorAll('input, select').forEach((el) => {
+      if (!validateField(el)) allValid = false;
+    });
+    if (!allValid) {
+      const firstInvalid = registerForm.querySelector('.field.invalid input, .field.invalid select');
+      if (firstInvalid) firstInvalid.focus();
+      return;
+    }
+
+    setRegisterBusy(true);
+    try {
+      const formObject = Object.fromEntries(new FormData(registerForm).entries());
+
+      const res = await fetch('https://shreegarbabeatsbackend.onrender.com/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formObject)
+      });
+
+      if (res.status !== 200) throw new Error('HTTP ' + res.status);
+
+      // the endpoint returns the created user; use it if it has an id, otherwise re-fetch the list
+      const created = await res.json().catch(() => null);
+      if (created && created.userId !== undefined) {
+        allUsers.push(created);
+      } else {
+        await reloadUsers();
+      }
+
+      setRegisterBusy(false);
+      closeRegisterModal();
+      refreshView();
+    } catch (err) {
+      console.error('Register failed:', err);
+      registerError.textContent = 'Could not register this user (' + err.message + '). Please try again.';
+      registerError.hidden = false;
+      setRegisterBusy(false);
+    }
+  });
+
+  openRegisterBtn.addEventListener('click', openRegisterModal);
+  registerCancelBtn.addEventListener('click', closeRegisterModal);
+
+  // close on backdrop click — only if the press also started on the backdrop (so dragging a text selection out of an input doesn't close it)
+  let downOnRegisterBackdrop = false;
+  registerModal.addEventListener('mousedown', (e) => { downOnRegisterBackdrop = e.target === registerModal; });
+  registerModal.addEventListener('click', (e) => {
+    if (downOnRegisterBackdrop && e.target === registerModal) closeRegisterModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !registerModal.hidden) closeRegisterModal();
   });
 
   /* ---------- search ---------- */
