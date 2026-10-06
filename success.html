@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registration Confirmed — Shree Garba Beats</title>
+<title>Registration Confirmed - Shree Garba Beats</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -152,7 +152,7 @@
   }
   @media (max-width:479px){ .confirm-surface{ padding:30px 22px; } }
 
-  /* success glyph — a gold circle + check, drawn in the same restrained
+  /* success glyph - a gold circle + check, drawn in the same restrained
      line-art style as the dandiya mark on the registration page */
   .success-mark{ width:40px; height:40px; margin-bottom:22px; }
 
@@ -200,6 +200,23 @@
     font-size:11.5px;
     color:var(--ivory-dim);
     line-height:1.55;
+  }
+
+  .pay-block{
+    margin-bottom:28px;
+    padding-top:24px;
+    border-top:1px solid rgba(54,40,32,0.08);
+    text-align:center;
+  }
+  .pay-title{
+    font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--gold-light); margin-bottom:14px;
+  }
+  .pay-qr{
+    width:100%; max-width:350px; height:auto;
+    padding:10px; background:#fff;
+    border:1px solid var(--surface-border);
+    border-radius:var(--radius);
   }
 </style>
 </head>
@@ -277,7 +294,7 @@
 
         <p class="status">Registration Confirmed</p>
         <h2>You're on the list</h2>
-        <p class="lede">We've saved your spot for the Grand Garba Night. Details below — a copy has been noted against your name.</p>
+        <p class="lede">We've saved your spot for the Grand Garba Night. Details below - a copy has been noted against your name.</p>
 
         <div class="detail-list">
           <div class="detail-row">
@@ -294,13 +311,52 @@
           </div>
         </div>
 
-        <p class="confirm-footnote">Event updates will be shared over WhatsApp and email — keep an eye out closer to October.</p>
+        <div id="pay_block" class="pay-block">
+          <p class="pay-title">Scan to pay</p>
+          <img id="pay-qr" class="pay-qr" src="/assets/gloabl_qr.png" alt="UPI QR code for payment">
+        </div>
+
+        <p class="confirm-footnote">Event updates will be shared over WhatsApp and email - keep an eye out closer to October.</p>
       </div>
     </main>
 
   </div>
 
 <script>
+
+  const QR_MAPPINGS = {
+    GENERAL: '/assets/general_entry_qr.png',
+    COUPLE: '/assets/couple_entry_qr.png',
+    STAG: '/assets/stag_entry_qr.png',
+    GROUP_5: '/assets/group_5_entry_qr.png',
+    GROUP_10: '/assets/group_10_entry_qr.png'
+  };
+
+  const userJson = localStorage.getItem('user');
+
+  if (userJson == null) {
+    window.location.href = '/register.html';
+  }
+
+  const user = JSON.parse(userJson);
+
+  const fetchUser = async () => {
+    const res = await fetch(
+      `https://shreegarbabeatsbackend.onrender.com/users/fetch?${user["userId"] != undefined ? "user=" + user["userId"] + "&" : ""}phone=${user["phone"]}`, {
+      method: "GET",
+    });
+
+    if(res.status === 200) {
+      const resJson = await res.json();
+      if(userJson !== JSON.stringify(resJson))
+        localStorage.setItem("user", JSON.stringify(resJson));
+    }
+
+    if(res.status === 404) {
+      // window.location.href = "/register.html";
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', (e) => {
     document.body.classList.add('loaded');
 
@@ -319,18 +375,21 @@
       }
     }
 
-    const userJson = localStorage.getItem('user');
+    fetchUser().then(() => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      
+      document.querySelector('#name').innerHTML = user.name;
+      document.querySelector('#email').innerHTML = user.email;
+      document.querySelector('#phone').innerHTML = user.phone;
 
-    if (userJson == null) {
-      window.location.href = '/';
-      return;
-    }
-
-    const user = JSON.parse(userJson);
-
-    document.querySelector('#name').innerHTML = user.name;
-    document.querySelector('#email').innerHTML = user.email;
-    document.querySelector('#phone').innerHTML = user.phone;
+      if(user["is_payment_complete"] === true) {
+        document.querySelector("#pay_block").style.display = "none";
+      } else {
+        const qrCode = document.querySelector('#pay-qr');
+    
+        qrCode.src = QR_MAPPINGS[user['category']];
+      }
+    });
   });
 </script>
 </body>

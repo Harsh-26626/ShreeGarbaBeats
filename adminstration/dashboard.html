@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shree Garba Beats — Admin</title>
+<title>Shree Garba Beats - Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -336,7 +336,7 @@
       <p class="intro-sub">Manage and view everyone registered for The Grand Garba Night.</p>
     </div>
     <div class="total-chip">
-      <div class="num" id="totalCount">—</div>
+      <div class="num" id="totalCount">-</div>
       <div class="label">Total Registrations</div>
     </div>
   </div>
@@ -454,7 +454,7 @@
   // Input type per editable field
   const inputTypes = { name:'text', email:'email', phone:'tel' };
 
-  // Category is an ENUM on the backend — same values as register.html
+  // Category is an ENUM on the backend - same values as register.html
   const categoryOptions = [
     ['GENERAL', 'General Entry - ₹300'],
     ['STAG',    'Stag - ₹600'],
@@ -490,7 +490,7 @@
   const deleteConfirmBtn = document.querySelector('#deleteConfirmBtn');
 
   /* ============================================================
-     SERVER HOOKS — fill these in with your fetch requests.
+     SERVER HOOKS - fill these in with your fetch requests.
      The UI has already been updated by the time these run
      (optimistic update). For edit: if this function throws, the
      row is rolled back to its old values. For delete: if it
@@ -906,7 +906,7 @@
   openRegisterBtn.addEventListener('click', openRegisterModal);
   registerCancelBtn.addEventListener('click', closeRegisterModal);
 
-  // close on backdrop click — only if the press also started on the backdrop (so dragging a text selection out of an input doesn't close it)
+  // close on backdrop click - only if the press also started on the backdrop (so dragging a text selection out of an input doesn't close it)
   let downOnRegisterBackdrop = false;
   registerModal.addEventListener('mousedown', (e) => { downOnRegisterBackdrop = e.target === registerModal; });
   registerModal.addEventListener('click', (e) => {
