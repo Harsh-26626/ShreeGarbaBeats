@@ -157,6 +157,15 @@
   td.col-name{ color:var(--ivory); font-weight:500; }
   td.col-actions{ text-align:right; }
 
+  /* ---------- payment badge ---------- */
+  .pay-badge{
+    display:inline-block;
+    font-size:11px; letter-spacing:.06em; text-transform:uppercase; font-weight:500;
+    padding:4px 11px; border-radius:20px;
+  }
+  .pay-badge.paid{ color:#2f6b3a; background:rgba(47,107,58,0.12); border:1px solid rgba(47,107,58,0.28); }
+  .pay-badge.pending{ color:#9a6a1f; background:rgba(185,131,91,0.14); border:1px solid rgba(185,131,91,0.35); }
+
   /* ---------- row action buttons ---------- */
   .row-actions{ display:inline-flex; gap:8px; }
   .btn{
@@ -368,7 +377,7 @@
             <th>Email</th>
             <th>Phone</th>
             <th>Category</th>
-            <th>Workshop Attendee</th>
+            <th>Payment</th>
             <th class="col-actions">Actions</th>
           </tr>
         </thead>
@@ -416,8 +425,7 @@
         <span class="error-msg">Please enter a valid email address.</span>
       </div>
 
-      <div class="field-row">
-        <div class="field" data-field="category">
+      <div class="field" data-field="category">
           <label for="rg-category">Category</label>
           <select name="category" id="rg-category" required>
             <option value="" disabled selected>Select category</option>
@@ -430,17 +438,6 @@
           <span class="error-msg">Please select a category.</span>
         </div>
 
-        <div class="field" data-field="workshop_attendee">
-          <label for="rg-workshop">Attending the free workshop?</label>
-          <select name="workshop_attendee" id="rg-workshop" required>
-            <option value="" disabled selected>Choose</option>
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
-          <span class="error-msg">Please make a selection.</span>
-        </div>
-      </div>
-
       <div class="form-error" id="registerError" hidden></div>
 
       <div class="modal-actions">
@@ -452,7 +449,7 @@
 </div>
 
 <script>
-  const attributes = ['name', 'email', 'phone', 'category', 'workshop_attendee'];
+  const attributes = ['name', 'email', 'phone', 'category', 'is_payment_complete'];
 
   // Input type per editable field
   const inputTypes = { name:'text', email:'email', phone:'tel' };
@@ -538,11 +535,6 @@
 
   /* ---------- helpers ---------- */
 
-  // Workshop field: render a Yes/No dropdown if the value is boolean or a yes/no string
-  function isYesNo(v) {
-    return typeof v === 'boolean' || ['yes', 'no'].includes(String(v).toLowerCase());
-  }
-
   function buildEditControl(attribute, value) {
     let control;
 
@@ -565,18 +557,17 @@
       control.addEventListener('change', () => {
         draft[attribute] = control.value;
       });
-    } else if (attribute === 'workshop_attendee' && isYesNo(value)) {
+    } else if (attribute === 'is_payment_complete') {
       control = document.createElement('select');
-      const isBool = typeof value === 'boolean';
-      [['Yes', isBool ? true : 'Yes'], ['No', isBool ? false : 'No']].forEach(([label, val]) => {
+      [['Pending', 'false'], ['Paid', 'true']].forEach(([label, val]) => {
         const opt = document.createElement('option');
-        opt.value = String(val);
+        opt.value = val;
         opt.textContent = label;
         control.appendChild(opt);
       });
-      control.value = String(isBool ? value : (String(value).toLowerCase() === 'yes' ? 'Yes' : 'No'));
+      control.value = String(value === true);
       control.addEventListener('change', () => {
-        draft[attribute] = isBool ? control.value === 'true' : control.value;
+        draft[attribute] = control.value === 'true';
       });
     } else {
       control = document.createElement('input');
@@ -629,6 +620,12 @@
         const td = document.createElement('td');
         if (editing) {
           td.appendChild(buildEditControl(attribute, draft[attribute]));
+        } else if (attribute === 'is_payment_complete') {
+          const paid = user[attribute] === true;
+          const badge = document.createElement('span');
+          badge.className = 'pay-badge ' + (paid ? 'paid' : 'pending');
+          badge.textContent = paid ? 'Paid' : 'Pending';
+          td.appendChild(badge);
         } else {
           if (attribute === 'name') td.className = 'col-name';
           td.innerText = user[attribute];
@@ -955,7 +952,7 @@
       loadingState.hidden = true;
       refreshView();
     } else {
-      window.location.href = '../';
+      // window.location.href = '../';
     }
   });
 </script>
