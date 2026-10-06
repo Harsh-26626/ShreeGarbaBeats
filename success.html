@@ -316,6 +316,11 @@
           <img id="pay-qr" class="pay-qr" src="/assets/gloabl_qr.png" alt="UPI QR code for payment">
         </div>
 
+        <div class="pay-block" id="paidBlock" style="display:none">
+          <p class="pay-title">Payment received ✓</p>
+          <p class="paid-text">Thank you! Your entry is confirmed. See you at the Grand Garba Night.</p>
+        </div>
+
         <p class="confirm-footnote">Event updates will be shared over WhatsApp and email - keep an eye out closer to October.</p>
       </div>
     </main>
@@ -353,7 +358,8 @@
     }
 
     if(res.status === 404) {
-      // window.location.href = "/register.html";
+      window.location.href = "/register.html";
+      localStorage.removeItem("user");
     }
   }
 
@@ -384,6 +390,7 @@
 
       if(user["is_payment_complete"] === true) {
         document.querySelector("#pay_block").style.display = "none";
+        document.getElementById('paidBlock').style.display = 'block';
       } else {
         const qrCode = document.querySelector('#pay-qr');
     
